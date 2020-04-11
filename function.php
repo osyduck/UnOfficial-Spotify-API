@@ -160,8 +160,8 @@ public function nama()
     
 public function createAccount($email, $nama, $pass)
     {
-
-        curl_setopt_array($curl, array(
+    	$ch = curl_init();
+        curl_setopt_array($ch, array(
         CURLOPT_URL => "https://spclient.wg.spotify.com/signup/public/v1/account/",
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => "",
@@ -191,9 +191,10 @@ public function createAccount($email, $nama, $pass)
         ),
         ));
 
-        $response = curl_exec($curl);
+        $response = curl_exec($ch);
         return $response;
-
+        //output
+        // {"status":1,"country":"US","dmca-radio":true,"shuffle-restricted":false,"username":"fz4f4xvszmzsopskkiv6621ay","can_accept_licenses_in_one_step":true,"requires_marketing_opt_in":false,"requires_marketing_opt_in_text":false,"minimum_age":13,"country_group":"NA","specific_licenses":false,"pretick_eula":true,"use_all_genders":true,"date_endianness":2,"is_country_launched":true}
     }
 }
 ?>

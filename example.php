@@ -4,17 +4,11 @@ require "function.php";
 
 $spotify = new spotify();
 
+$email = "exampleregister@yandex.com";
+$password = "password6969";
+$nama = $spotify->nama();
+$register = $spotify->createAccount($email, $nama, $password);
 
-$username = "";
-$password = "";
-$cookie = $spotify->getCookies();
-$login = $spotify->tryLogin($cookie, $username, $password);
-$token = $spotify->getToken($login[1]);
-
-$json = json_decode($token[1], true);
-
-$token = $json['accessToken'];
-
-print_r($spotify->followUser($token, "osyduck"));
+var_dump($register);
 
 ?>
