@@ -158,12 +158,8 @@ public function nama()
 	return $name[2][mt_rand(0, 14) ];
     }
     
-public function createAccount()
+public function createAccount($email, $nama, $pass)
     {
-        $nama = $this->nama();
-        $email = str_replace(" ", "", $nama) . mt_rand(100, 999)."@gmail.com";
-        $pass = "Asdasd123";
-        $curl = curl_init();
 
         curl_setopt_array($curl, array(
         CURLOPT_URL => "https://spclient.wg.spotify.com/signup/public/v1/account/",
