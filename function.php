@@ -135,7 +135,7 @@ public function followPlaylist($token, $target)
         $headers[] = "Host: spclient.wg.spotify.com";
         $headers[] = "Connection: close";
 
-        curl_setopt($this->ch, CURLOPT_URL, 'https://spclient.wg.spotify.com/playlist-publish/v1/subscription/playlist/37i9dQZF1DXcBWIGoYBM5M');
+        curl_setopt($this->ch, CURLOPT_URL, 'https://spclient.wg.spotify.com/playlist-publish/v1/subscription/playlist/'.$target);
         curl_setopt($this->ch, CURLOPT_POSTFIELDS, '');
         curl_setopt($this->ch, CURLOPT_POST, 1);
         curl_setopt($this->ch, CURLOPT_HEADER, 0);
@@ -144,7 +144,60 @@ public function followPlaylist($token, $target)
         $result = curl_exec($this->ch);
         return $result;
     }
+public function nama()
+	{
+	$ch = curl_init();
+	curl_setopt($ch, CURLOPT_URL, "http://ninjaname.horseridersupply.com/indonesian_name.php");
+	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+	curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+	curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+    $ex = curl_exec($ch);
+    
+	preg_match_all('~(&bull; (.*?)<br/>&bull; )~', $ex, $name);
+	return $name[2][mt_rand(0, 14) ];
+    }
+    
+public function createAccount()
+    {
+        $nama = $this->nama();
+        $email = str_replace(" ", "", $nama) . mt_rand(100, 999)."@gmail.com";
+        $pass = "Asdasd123";
+        $curl = curl_init();
 
+        curl_setopt_array($curl, array(
+        CURLOPT_URL => "https://spclient.wg.spotify.com/signup/public/v1/account/",
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => "",
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_SSL_VERIFYHOST => 0,
+        CURLOPT_SSL_VERIFYPEER => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => "POST",
+        CURLOPT_POSTFIELDS =>"------WebKitFormBoundaryJtAtiGwAb8W6vxpP\r\nContent-Disposition: form-data; name=\"email\"\r\n\r\n$email\r\n------WebKitFormBoundaryJtAtiGwAb8W6vxpP\r\nContent-Disposition: form-data; name=\"password_repeat\"\r\n\r\n$pass\r\n------WebKitFormBoundaryJtAtiGwAb8W6vxpP\r\nContent-Disposition: form-data; name=\"creation_point\"\r\n\r\nhttps://login.app.spotify.com?utm_source=spotify&utm_medium=desktop-win32-store&utm_campaign=organic\r\n------WebKitFormBoundaryJtAtiGwAb8W6vxpP\r\nContent-Disposition: form-data; name=\"password\"\r\n\r\n$pass\r\n------WebKitFormBoundaryJtAtiGwAb8W6vxpP\r\nContent-Disposition: form-data; name=\"referrer\"\r\n\r\n\r\n------WebKitFormBoundaryJtAtiGwAb8W6vxpP\r\nContent-Disposition: form-data; name=\"key\"\r\n\r\n4c7a36d5260abca4af282779720cf631\r\n------WebKitFormBoundaryJtAtiGwAb8W6vxpP\r\nContent-Disposition: form-data; name=\"gender\"\r\n\r\nmale\r\n------WebKitFormBoundaryJtAtiGwAb8W6vxpP\r\nContent-Disposition: form-data; name=\"platform\"\r\n\r\ndesktop\r\n------WebKitFormBoundaryJtAtiGwAb8W6vxpP\r\nContent-Disposition: form-data; name=\"birth_day\"\r\n\r\n25\r\n------WebKitFormBoundaryJtAtiGwAb8W6vxpP\r\nContent-Disposition: form-data; name=\"birth_month\"\r\n\r\n2\r\n------WebKitFormBoundaryJtAtiGwAb8W6vxpP\r\nContent-Disposition: form-data; name=\"creation_flow\"\r\n\r\ndesktop\r\n------WebKitFormBoundaryJtAtiGwAb8W6vxpP\r\nContent-Disposition: form-data; name=\"iagree\"\r\n\r\n1\r\n------WebKitFormBoundaryJtAtiGwAb8W6vxpP\r\nContent-Disposition: form-data; name=\"birth_year\"\r\n\r\n1990\r\n------WebKitFormBoundaryJtAtiGwAb8W6vxpP\r\nContent-Disposition: form-data; name=\"displayname\"\r\n\r\n$nama\r\n------WebKitFormBoundaryJtAtiGwAb8W6vxpP--",
+        CURLOPT_HTTPHEADER => array(
+            "Host: spclient.wg.spotify.com",
+            "Connection: keep-alive",
+            "Origin: https://login.app.spotify.com",
+            "X-Client-Id: 65b708073fc0480ea92a077233ca87bd",
+            "Spotify-App-Version: 1.1.22.633.g1bab253a",
+            "App-Platform: Win32",
+            "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Spotify/1.1.22.633 Safari/537.36",
+            "Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryJtAtiGwAb8W6vxpP;charset=utf-8",
+            "Accept: */*",
+            "Sec-Fetch-Site: same-site",
+            "Sec-Fetch-Mode: cors",
+            "Referer: https://login.app.spotify.com/index.html",
+            "Accept-Language: en",
+            "Content-Type: text/plain"
+        ),
+        ));
+
+        $response = curl_exec($curl);
+        return $response;
+
+    }
 }
-
 ?>
