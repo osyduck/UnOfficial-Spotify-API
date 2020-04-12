@@ -21,6 +21,22 @@
 git clone https://github.com/osyduck/UnOfficial-Spotify-API.git
 ```
 
+## Function status
+| Function                	| Status               	|
+|-------------------------	|----------------------	|
+| `tryLogin`              	| OK                   	|
+| `getToken`        	      | OK                   	|
+| `followUser`     	        | OK                   	|
+| `isFollowUser`            | OK                   	|
+| `unfollowUser`         	  | OK                   	|
+| `followArtist`         	  | OK                   	|
+| `isFollowArtist`    	    | OK 	                  |
+| `unfollowArtist`          | OK                   	|
+| `followPlaylist` 	        | OK                   	|
+| `isFollowPlaylist`  	    | OK                   	|
+| `unfollowPlaylist`  	    | OK                   	|
+| `createAccount`  	        | OK                   	|
+
 ## Usage
 
 ```sh

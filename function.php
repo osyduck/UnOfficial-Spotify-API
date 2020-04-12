@@ -11,10 +11,9 @@ public function __construct()
         curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, 1);
     }
 
-public function getCookies()
+private function getCookies()
     {
         $headers = array();
-        //$headers[] = "Accept-Encoding: gzip, deflate, sdch, br";
         $headers[] = "Accept-Language: it-IT,it;q=0.8,en-US;q=0.6,en;q=0.4";
         $headers[] = "Upgrade-Insecure-Requests: 1";
         $headers[] = "Content-Type: application/x-www-form-urlencoded";
@@ -32,8 +31,9 @@ public function getCookies()
         return $token;
     }
 
-public function tryLogin($token, $username, $password)
+public function tryLogin($username, $password)
     {   
+        $token = $this->getCookies();
         $bon_cookie = base64_encode("0|0|0|0|1|1|1|1");
         $headers = array();
 		$headers[] = "User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 8_3 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) FxiOS/1.0 Mobile/12F69 Safari/600.1.4";
@@ -79,83 +79,196 @@ public function getToken($cookie)
         }
     }
 
-public function followUser($token, $target)
+public function followUser($token, $ids)
     {
         $headers = array();
-        $headers[] = "User-Agent: Spotify/8.5.51 Android/26 (Custom Tablet)";
-        $headers[] = "X-Client-Id: 06f21c6a8b7b41279bffabb9537d8286";
+        $headers[] = "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36";
 		$headers[] = "Content-Type: application/x-www-form-urlencoded";
         $headers[] = "Accept: text/plain";
         $headers[] = "Spotify-App-Version: 8.5.51";
         $headers[] = "Authorization: Bearer $token";
-        $headers[] = "Host: spclient.wg.spotify.com";
-        $headers[] = "Connection: close";
+        $headers[] = "Host: api.spotify.com";
+        $headers[] = "Connection: keep-alive";
 
-        curl_setopt($this->ch, CURLOPT_URL, 'https://spclient.wg.spotify.com/socialgraph/v2/following?format=json');
-        curl_setopt($this->ch, CURLOPT_POSTFIELDS, '{"target_uris": ["spotify:user:'.$target.'"]}');
-        curl_setopt($this->ch, CURLOPT_POST, 1);
-        curl_setopt($this->ch, CURLOPT_HEADER, 0);
-        curl_setopt($this->ch, CURLOPT_HTTPHEADER, $headers);
-
-        $result = curl_exec($this->ch);
-        return $result;
-    }
-
-public function followArtist($token, $target)
-    {
-        $headers = array();
-        $headers[] = "User-Agent: Spotify/8.5.51 Android/26 (Custom Tablet)";
-        $headers[] = "X-Client-Id: 06f21c6a8b7b41279bffabb9537d8286";
-		$headers[] = "Content-Type: application/x-www-form-urlencoded";
-        $headers[] = "Accept: text/plain";
-        $headers[] = "Spotify-App-Version: 8.5.51";
-        $headers[] = "Authorization: Bearer $token";
-        $headers[] = "Host: spclient.wg.spotify.com";
-        $headers[] = "Connection: close";
-
-        curl_setopt($this->ch, CURLOPT_URL, 'https://spclient.wg.spotify.com/socialgraph/v2/following?format=json');
-        curl_setopt($this->ch, CURLOPT_POSTFIELDS, '{"target_uris": ["spotify:artist:'.$target.'"]}');
-        curl_setopt($this->ch, CURLOPT_POST, 1);
-        curl_setopt($this->ch, CURLOPT_HEADER, 0);
-        curl_setopt($this->ch, CURLOPT_HTTPHEADER, $headers);
-
-        $result = curl_exec($this->ch);
-        return $result;
-    }
-
-public function followPlaylist($token, $target)
-    {
-        $headers = array();
-        $headers[] = "User-Agent: Spotify/8.5.51 Android/26 (Custom Tablet)";
-        $headers[] = "X-Client-Id: 06f21c6a8b7b41279bffabb9537d8286";
-		$headers[] = "Content-Type: application/x-www-form-urlencoded";
-        $headers[] = "Accept: text/plain";
-        $headers[] = "Spotify-App-Version: 8.5.51";
-        $headers[] = "Authorization: Bearer $token";
-        $headers[] = "Host: spclient.wg.spotify.com";
-        $headers[] = "Connection: close";
-
-        curl_setopt($this->ch, CURLOPT_URL, 'https://spclient.wg.spotify.com/playlist-publish/v1/subscription/playlist/'.$target);
+        curl_setopt($this->ch, CURLOPT_URL, 'https://api.spotify.com/v1/me/following?type=user&ids='.$ids);
         curl_setopt($this->ch, CURLOPT_POSTFIELDS, '');
         curl_setopt($this->ch, CURLOPT_POST, 1);
+        curl_setopt($this->ch, CURLOPT_CUSTOMREQUEST, "PUT");
         curl_setopt($this->ch, CURLOPT_HEADER, 0);
         curl_setopt($this->ch, CURLOPT_HTTPHEADER, $headers);
 
         $result = curl_exec($this->ch);
         return $result;
     }
-public function nama()
-	{
-	$ch = curl_init();
-	curl_setopt($ch, CURLOPT_URL, "http://ninjaname.horseridersupply.com/indonesian_name.php");
-	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-	curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-	curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-    $ex = curl_exec($ch);
+
+public function isFollowUser($token, $ids)
+    {
+        $headers = array();
+        $headers[] = "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36";
+		$headers[] = "Content-Type: application/x-www-form-urlencoded";
+        $headers[] = "Accept: text/plain";
+        $headers[] = "Spotify-App-Version: 8.5.51";
+        $headers[] = "Authorization: Bearer $token";
+        $headers[] = "Host: api.spotify.com";
+        $headers[] = "Connection: keep-alive";
+
+        curl_setopt($this->ch, CURLOPT_URL, 'https://api.spotify.com/v1/me/following/contains?type=user&ids='.$ids);
+        curl_setopt($this->ch, CURLOPT_HEADER, 0);
+        curl_setopt($this->ch, CURLOPT_CUSTOMREQUEST, "GET");
+        curl_setopt($this->ch, CURLOPT_HTTPHEADER, $headers);
+
+        $result = curl_exec($this->ch);
+        return $result;
+    }
+
+public function unfollowUser($token, $ids)
+    {
+        $headers = array();
+        $headers[] = "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36";
+		$headers[] = "Content-Type: application/x-www-form-urlencoded";
+        $headers[] = "Accept: text/plain";
+        $headers[] = "Spotify-App-Version: 8.5.51";
+        $headers[] = "Authorization: Bearer $token";
+        $headers[] = "Host: api.spotify.com";
+        $headers[] = "Connection: keep-alive";
+
+        curl_setopt($this->ch, CURLOPT_URL, 'https://api.spotify.com/v1/me/following?type=user&ids='.$ids);
+        curl_setopt($this->ch, CURLOPT_POSTFIELDS, '');
+        curl_setopt($this->ch, CURLOPT_POST, 1);
+        curl_setopt($this->ch, CURLOPT_CUSTOMREQUEST, "PUT");
+        curl_setopt($this->ch, CURLOPT_HEADER, 0);
+        curl_setopt($this->ch, CURLOPT_HTTPHEADER, $headers);
+
+        $result = curl_exec($this->ch);
+        return $result;
+    }   
+
+public function followArtist($token, $ids)
+    {
+        $headers = array();
+        $headers[] = "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36";
+		$headers[] = "Content-Type: application/x-www-form-urlencoded";
+        $headers[] = "Accept: text/plain";
+        $headers[] = "Spotify-App-Version: 8.5.51";
+        $headers[] = "Authorization: Bearer $token";
+        $headers[] = "Host: api.spotify.com";
+        $headers[] = "Connection: keep-alive";
+
+        curl_setopt($this->ch, CURLOPT_URL, 'https://api.spotify.com/v1/me/following?type=artist&ids='.$ids);
+        curl_setopt($this->ch, CURLOPT_POSTFIELDS, '');
+        curl_setopt($this->ch, CURLOPT_POST, 1);
+        curl_setopt($this->ch, CURLOPT_CUSTOMREQUEST, "PUT");
+        curl_setopt($this->ch, CURLOPT_HEADER, 0);
+        curl_setopt($this->ch, CURLOPT_HTTPHEADER, $headers);
+
+        $result = curl_exec($this->ch);
+        return $result;
+    }
+
+public function isFollowArtist($token, $ids)
+    {
+        $headers = array();
+        $headers[] = "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36";
+		$headers[] = "Content-Type: application/x-www-form-urlencoded";
+        $headers[] = "Accept: text/plain";
+        $headers[] = "Spotify-App-Version: 8.5.51";
+        $headers[] = "Authorization: Bearer $token";
+        $headers[] = "Host: api.spotify.com";
+        $headers[] = "Connection: keep-alive";
+
+        curl_setopt($this->ch, CURLOPT_URL, 'https://api.spotify.com/v1/me/following/contains?type=artist&ids='.$ids);
+        curl_setopt($this->ch, CURLOPT_HEADER, 0);
+        curl_setopt($this->ch, CURLOPT_CUSTOMREQUEST, "GET");
+        curl_setopt($this->ch, CURLOPT_HTTPHEADER, $headers);
+
+        $result = curl_exec($this->ch);
+        return $result;
+    }
     
-	preg_match_all('~(&bull; (.*?)<br/>&bull; )~', $ex, $name);
-	return $name[2][mt_rand(0, 14) ];
+public function unfollowArtist($token, $ids)
+    {
+        $headers = array();
+        $headers[] = "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36";
+		$headers[] = "Content-Type: application/x-www-form-urlencoded";
+        $headers[] = "Accept: text/plain";
+        $headers[] = "Spotify-App-Version: 8.5.51";
+        $headers[] = "Authorization: Bearer $token";
+        $headers[] = "Host: api.spotify.com";
+        $headers[] = "Connection: keep-alive";
+
+        curl_setopt($this->ch, CURLOPT_URL, 'https://api.spotify.com/v1/me/following?type=artist&ids='.$ids);
+        curl_setopt($this->ch, CURLOPT_POSTFIELDS, '');
+        curl_setopt($this->ch, CURLOPT_POST, 1);
+        curl_setopt($this->ch, CURLOPT_CUSTOMREQUEST, "DELETE");
+        curl_setopt($this->ch, CURLOPT_HEADER, 0);
+        curl_setopt($this->ch, CURLOPT_HTTPHEADER, $headers);
+
+        $result = curl_exec($this->ch);
+        return $result;
+    }
+
+public function followPlaylist($token, $playlist_id)
+    {
+        $headers = array();
+        $headers[] = "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36";
+		$headers[] = "Content-Type: application/x-www-form-urlencoded";
+        $headers[] = "Accept: text/plain";
+        $headers[] = "Spotify-App-Version: 8.5.51";
+        $headers[] = "Authorization: Bearer $token";
+        $headers[] = "Host: api.spotify.com";
+        $headers[] = "Connection: keep-alive";
+
+        curl_setopt($this->ch, CURLOPT_URL, 'https://api.spotify.com/v1/playlists/'.$playlist_id.'/followers');
+        curl_setopt($this->ch, CURLOPT_POSTFIELDS, '{"public":false}');
+        curl_setopt($this->ch, CURLOPT_POST, 1);
+        curl_setopt($this->ch, CURLOPT_CUSTOMREQUEST, "PUT");
+        curl_setopt($this->ch, CURLOPT_HEADER, 0);
+        curl_setopt($this->ch, CURLOPT_HTTPHEADER, $headers);
+
+        $result = curl_exec($this->ch);
+        return $result;
+    }
+
+public function isFollowPlaylist($token, $playlist_id, $ids)
+    {
+        $headers = array();
+        $headers[] = "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36";
+		$headers[] = "Content-Type: application/x-www-form-urlencoded";
+        $headers[] = "Accept: text/plain";
+        $headers[] = "Spotify-App-Version: 8.5.51";
+        $headers[] = "Authorization: Bearer $token";
+        $headers[] = "Host: api.spotify.com";
+        $headers[] = "Connection: keep-alive";
+
+        curl_setopt($this->ch, CURLOPT_URL, 'https://api.spotify.com/v1/playlists/'.$playlist_id.'/followers/contains?ids='.$ids);
+        curl_setopt($this->ch, CURLOPT_HEADER, 0);
+        curl_setopt($this->ch, CURLOPT_CUSTOMREQUEST, "GET");
+        curl_setopt($this->ch, CURLOPT_HTTPHEADER, $headers);
+
+        $result = curl_exec($this->ch);
+        return $result;
+    }    
+ 
+public function unfollowPlaylist($token, $playlist_id)
+    {
+        $headers = array();
+        $headers[] = "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36";
+		$headers[] = "Content-Type: application/x-www-form-urlencoded";
+        $headers[] = "Accept: text/plain";
+        $headers[] = "Spotify-App-Version: 8.5.51";
+        $headers[] = "Authorization: Bearer $token";
+        $headers[] = "Host: api.spotify.com";
+        $headers[] = "Connection: keep-alive";
+
+        curl_setopt($this->ch, CURLOPT_URL, 'https://api.spotify.com/v1/playlists/'.$playlist_id.'/followers');
+        curl_setopt($this->ch, CURLOPT_POSTFIELDS, '');
+        curl_setopt($this->ch, CURLOPT_POST, 1);
+        curl_setopt($this->ch, CURLOPT_CUSTOMREQUEST, "DELETE");
+        curl_setopt($this->ch, CURLOPT_HEADER, 0);
+        curl_setopt($this->ch, CURLOPT_HTTPHEADER, $headers);
+
+        $result = curl_exec($this->ch);
+        return $result;
     }
     
 public function createAccount($email, $nama, $pass)
@@ -172,7 +285,22 @@ public function createAccount($email, $nama, $pass)
         CURLOPT_FOLLOWLOCATION => true,
         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
         CURLOPT_CUSTOMREQUEST => "POST",
-        CURLOPT_POSTFIELDS =>"------WebKitFormBoundaryJtAtiGwAb8W6vxpP\r\nContent-Disposition: form-data; name=\"email\"\r\n\r\n$email\r\n------WebKitFormBoundaryJtAtiGwAb8W6vxpP\r\nContent-Disposition: form-data; name=\"password_repeat\"\r\n\r\n$pass\r\n------WebKitFormBoundaryJtAtiGwAb8W6vxpP\r\nContent-Disposition: form-data; name=\"creation_point\"\r\n\r\nhttps://login.app.spotify.com?utm_source=spotify&utm_medium=desktop-win32-store&utm_campaign=organic\r\n------WebKitFormBoundaryJtAtiGwAb8W6vxpP\r\nContent-Disposition: form-data; name=\"password\"\r\n\r\n$pass\r\n------WebKitFormBoundaryJtAtiGwAb8W6vxpP\r\nContent-Disposition: form-data; name=\"referrer\"\r\n\r\n\r\n------WebKitFormBoundaryJtAtiGwAb8W6vxpP\r\nContent-Disposition: form-data; name=\"key\"\r\n\r\n4c7a36d5260abca4af282779720cf631\r\n------WebKitFormBoundaryJtAtiGwAb8W6vxpP\r\nContent-Disposition: form-data; name=\"gender\"\r\n\r\nmale\r\n------WebKitFormBoundaryJtAtiGwAb8W6vxpP\r\nContent-Disposition: form-data; name=\"platform\"\r\n\r\ndesktop\r\n------WebKitFormBoundaryJtAtiGwAb8W6vxpP\r\nContent-Disposition: form-data; name=\"birth_day\"\r\n\r\n25\r\n------WebKitFormBoundaryJtAtiGwAb8W6vxpP\r\nContent-Disposition: form-data; name=\"birth_month\"\r\n\r\n2\r\n------WebKitFormBoundaryJtAtiGwAb8W6vxpP\r\nContent-Disposition: form-data; name=\"creation_flow\"\r\n\r\ndesktop\r\n------WebKitFormBoundaryJtAtiGwAb8W6vxpP\r\nContent-Disposition: form-data; name=\"iagree\"\r\n\r\n1\r\n------WebKitFormBoundaryJtAtiGwAb8W6vxpP\r\nContent-Disposition: form-data; name=\"birth_year\"\r\n\r\n1990\r\n------WebKitFormBoundaryJtAtiGwAb8W6vxpP\r\nContent-Disposition: form-data; name=\"displayname\"\r\n\r\n$nama\r\n------WebKitFormBoundaryJtAtiGwAb8W6vxpP--",
+        CURLOPT_POSTFIELDS => array(
+            'iagree' => true,
+            'email' => $email,
+            'password' => $pass,
+            'password_repeat' => $pass,
+            'creation_point' => 'https://login.app.spotify.com?utm_source=spotify&utm_medium=desktop-win32-store&utm_campaign=organic',
+            'referrer' => '',
+            'key' => '4c7a36d5260abca4af282779720cf631',
+            'gender' => 'male',
+            'platform' => 'desktop',
+            'birth_day' => '25',
+            'birth_month' => '9',
+            'birth_year' => '1990',
+            'creation_flow' => 'desktop',
+            'displayname' => $nama
+            ),
         CURLOPT_HTTPHEADER => array(
             "Host: spclient.wg.spotify.com",
             "Connection: keep-alive",
