@@ -274,6 +274,7 @@ public function unfollowPlaylist($token, $playlist_id)
 public function createAccount($email, $nama, $pass)
     {
 
+        $curl = curl_init();
         curl_setopt_array($curl, array(
         CURLOPT_URL => "https://spclient.wg.spotify.com/signup/public/v1/account/",
         CURLOPT_RETURNTRANSFER => true,
