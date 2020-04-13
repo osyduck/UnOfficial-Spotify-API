@@ -271,12 +271,12 @@ public function unfollowPlaylist($token, $playlist_id)
         return $result;
     }
     
-public function createAccount($email, $nama, $pass)
+public function createAccount($email, $name, $pass)
     {
 
         $curl = curl_init();
         curl_setopt_array($curl, array(
-        CURLOPT_URL => "https://spclient.wg.spotify.com/signup/public/v1/account/",
+        CURLOPT_URL => "https://spclient.wg.spotify.com:443/signup/public/v1/account/",
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => "",
         CURLOPT_MAXREDIRS => 10,
@@ -286,37 +286,13 @@ public function createAccount($email, $nama, $pass)
         CURLOPT_FOLLOWLOCATION => true,
         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
         CURLOPT_CUSTOMREQUEST => "POST",
-        CURLOPT_POSTFIELDS => array(
-            'iagree' => true,
-            'email' => $email,
-            'password' => $pass,
-            'password_repeat' => $pass,
-            'creation_point' => 'https://login.app.spotify.com?utm_source=spotify&utm_medium=desktop-win32-store&utm_campaign=organic',
-            'referrer' => '',
-            'key' => '4c7a36d5260abca4af282779720cf631',
-            'gender' => 'male',
-            'platform' => 'desktop',
-            'birth_day' => '25',
-            'birth_month' => '9',
-            'birth_year' => '1990',
-            'creation_flow' => 'desktop',
-            'displayname' => $nama
-            ),
+        CURLOPT_POST => 1,
+        CURLOPT_POSTFIELDS => "email=$email&password_repeat=$pass&password=$pass&key=142b583129b2df829de3656f9eb484e6&gender=male&platform=Android-ARM&creation_point=client_mobile&birth_day=12&birth_month=5&iagree=true&app_version=849800892&birth_year=1990&displayname=$name",
         CURLOPT_HTTPHEADER => array(
             "Host: spclient.wg.spotify.com",
+            "User-Agent: Spotify/8.4.98 Android/26 (Custom Tablet)",
             "Connection: keep-alive",
-            "Origin: https://login.app.spotify.com",
-            "X-Client-Id: 65b708073fc0480ea92a077233ca87bd",
-            "Spotify-App-Version: 1.1.22.633.g1bab253a",
-            "App-Platform: Win32",
-            "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Spotify/1.1.22.633 Safari/537.36",
-            "Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryJtAtiGwAb8W6vxpP;charset=utf-8",
-            "Accept: */*",
-            "Sec-Fetch-Site: same-site",
-            "Sec-Fetch-Mode: cors",
-            "Referer: https://login.app.spotify.com/index.html",
-            "Accept-Language: en",
-            "Content-Type: text/plain"
+            "Content-Type: application/x-www-form-urlencoded"
         ),
         ));
 
