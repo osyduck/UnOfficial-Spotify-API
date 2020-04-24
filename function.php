@@ -36,8 +36,8 @@ public function tryLogin($username, $password)
         $token = $this->getCookies();
         $bon_cookie = base64_encode("0|0|0|0|1|1|1|1");
         $headers = array();
-	$headers[] = "User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 8_3 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) FxiOS/1.0 Mobile/12F69 Safari/600.1.4";
-	$headers[] = "Content-Type: application/x-www-form-urlencoded";
+        $headers[] = "User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 8_3 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) FxiOS/1.0 Mobile/12F69 Safari/600.1.4";
+        $headers[] = "Content-Type: application/x-www-form-urlencoded";
         $headers[] = "Accept: application/json, text/plain";
         $headers[] = "Cookie: sp_t=; sp_new=1; __bon=$bon_cookie; _gat=1; __tdev=VV4fjDj7; __tvis=BGWgw2Xk; spot=; csrf_token=$token; remember=7n4qwa5jrogiu7bysts679i3d";
         curl_setopt($this->ch, CURLOPT_URL, 'https://accounts.spotify.com/api/login');
@@ -47,7 +47,8 @@ public function tryLogin($username, $password)
         curl_setopt($this->ch, CURLOPT_HEADER, true);
 
         $result = curl_exec($this->ch);
-        if(preg_match("/displayName/", $result)){
+        
+        if(preg_match('/result":"ok/', $result)){
             preg_match_all('/^Set-Cookie:\s*([^;\r\n]*)/mi', $result, $kue);
             $cookie = "";
             for($i=0; $i<count($kue[1])-1; $i++){
@@ -55,15 +56,15 @@ public function tryLogin($username, $password)
             }
             return array(true, $cookie);
         }else{
-            return array(false);
+            return array(false, $result);
         }
 
     }
 public function getToken($cookie)
     {
         $headers = array();
-	$headers[] = "User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 8_3 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) FxiOS/1.0 Mobile/12F69 Safari/600.1.4";
-	$headers[] = "Content-Type: application/x-www-form-urlencoded";
+        $headers[] = "User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 8_3 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) FxiOS/1.0 Mobile/12F69 Safari/600.1.4";
+        $headers[] = "Content-Type: application/x-www-form-urlencoded";
         $headers[] = "Accept: application/json, text/plain";
         $headers[] = "Cookie: $cookie";
         curl_setopt($this->ch, CURLOPT_URL, 'https://open.spotify.com/get_access_token?reason=transport&productType=web_player');
@@ -83,7 +84,7 @@ public function followUser($token, $ids)
     {
         $headers = array();
         $headers[] = "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36";
-	$headers[] = "Content-Type: application/x-www-form-urlencoded";
+	    $headers[] = "Content-Type: application/x-www-form-urlencoded";
         $headers[] = "Accept: text/plain";
         $headers[] = "Spotify-App-Version: 8.5.51";
         $headers[] = "Authorization: Bearer $token";
@@ -105,7 +106,7 @@ public function isFollowUser($token, $ids)
     {
         $headers = array();
         $headers[] = "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36";
-	$headers[] = "Content-Type: application/x-www-form-urlencoded";
+	    $headers[] = "Content-Type: application/x-www-form-urlencoded";
         $headers[] = "Accept: text/plain";
         $headers[] = "Spotify-App-Version: 8.5.51";
         $headers[] = "Authorization: Bearer $token";
@@ -125,7 +126,7 @@ public function unfollowUser($token, $ids)
     {
         $headers = array();
         $headers[] = "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36";
-	$headers[] = "Content-Type: application/x-www-form-urlencoded";
+	    $headers[] = "Content-Type: application/x-www-form-urlencoded";
         $headers[] = "Accept: text/plain";
         $headers[] = "Spotify-App-Version: 8.5.51";
         $headers[] = "Authorization: Bearer $token";
@@ -147,7 +148,7 @@ public function followArtist($token, $ids)
     {
         $headers = array();
         $headers[] = "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36";
-	$headers[] = "Content-Type: application/x-www-form-urlencoded";
+	    $headers[] = "Content-Type: application/x-www-form-urlencoded";
         $headers[] = "Accept: text/plain";
         $headers[] = "Spotify-App-Version: 8.5.51";
         $headers[] = "Authorization: Bearer $token";
@@ -169,7 +170,7 @@ public function isFollowArtist($token, $ids)
     {
         $headers = array();
         $headers[] = "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36";
-	$headers[] = "Content-Type: application/x-www-form-urlencoded";
+	    $headers[] = "Content-Type: application/x-www-form-urlencoded";
         $headers[] = "Accept: text/plain";
         $headers[] = "Spotify-App-Version: 8.5.51";
         $headers[] = "Authorization: Bearer $token";
@@ -189,7 +190,7 @@ public function unfollowArtist($token, $ids)
     {
         $headers = array();
         $headers[] = "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36";
-	$headers[] = "Content-Type: application/x-www-form-urlencoded";
+	    $headers[] = "Content-Type: application/x-www-form-urlencoded";
         $headers[] = "Accept: text/plain";
         $headers[] = "Spotify-App-Version: 8.5.51";
         $headers[] = "Authorization: Bearer $token";
@@ -211,7 +212,7 @@ public function followPlaylist($token, $playlist_id)
     {
         $headers = array();
         $headers[] = "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36";
-	$headers[] = "Content-Type: application/x-www-form-urlencoded";
+	    $headers[] = "Content-Type: application/x-www-form-urlencoded";
         $headers[] = "Accept: text/plain";
         $headers[] = "Spotify-App-Version: 8.5.51";
         $headers[] = "Authorization: Bearer $token";
@@ -233,7 +234,7 @@ public function isFollowPlaylist($token, $playlist_id, $ids)
     {
         $headers = array();
         $headers[] = "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36";
-	$headers[] = "Content-Type: application/x-www-form-urlencoded";
+	    $headers[] = "Content-Type: application/x-www-form-urlencoded";
         $headers[] = "Accept: text/plain";
         $headers[] = "Spotify-App-Version: 8.5.51";
         $headers[] = "Authorization: Bearer $token";
@@ -253,7 +254,7 @@ public function unfollowPlaylist($token, $playlist_id)
     {
         $headers = array();
         $headers[] = "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36";
-	$headers[] = "Content-Type: application/x-www-form-urlencoded";
+	    $headers[] = "Content-Type: application/x-www-form-urlencoded";
         $headers[] = "Accept: text/plain";
         $headers[] = "Spotify-App-Version: 8.5.51";
         $headers[] = "Authorization: Bearer $token";
